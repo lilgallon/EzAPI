@@ -72,4 +72,4 @@ If you want to contribute, make sure to respect PEP8 and python coding conventio
 ## Misc
 
 - See the changelog [here](CHANGELOG.md),
-- See the licence [here](../LICENCE).
+- See the licence [here](../LICENSE).
