@@ -1,3 +1,6 @@
+#!/usr/bin/python3.6
+# -*- coding: utf-8 -*-
+
 """
 It allows you to create and update a progress bar in a very simple way.
 It is made to be used in a non-object oriented programming context. You
