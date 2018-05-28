@@ -1,4 +1,6 @@
-# EzAPIs
+![EzAPI](images/EzAPI.png)
+
+# EzAPI
 A compilation of useful and VERY simple python APIs maintained by N3ROO. Those are made to be used in a non-object oriented programming context and can be used by beginners to do complex things in an easy way.
 
 ## Index

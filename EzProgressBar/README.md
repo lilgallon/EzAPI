@@ -1,3 +1,5 @@
+![EzAPI](images/EzProgressBar.png)
+
 # EzProgressBar ![version](https://img.shields.io/badge/Version-1-green.svg)
 It allows you to create and update a progress bar in a very simple way.
 It is made to be used in a non-object oriented programming context. You
