@@ -67,6 +67,10 @@ progress_window = EzProgressBar({window title},
 
 Get the file from the github page and put it in your project directory.
 
+## Documentation
+
+The documentation will soon be available on [n3roo.github.io](https://n3roo.github.io/).
+
 ## Contributing
 
 If you want to contribute, make sure to respect PEP8 and python coding conventions. And please remind that the goal of this API is to be very easy to use in a non-object oriented programming context.
