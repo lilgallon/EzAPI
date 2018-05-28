@@ -125,13 +125,13 @@ class EzProgressBar:
         """
 
         if progress > 100:
+            warnings.warn('The progress has been set to ' + str(progress) +
+                          ' whereas the max is set to 100')
             progress = 100
-            warnings.warn('The progress has been set to %s whereas the max ' +
-                          'is set to 100', progress)
         elif progress < 0:
+            warnings.warn('The progress has been set to ' + str(progress) +
+                          ' whereas the min is set to 0')
             progress = 0
-            warnings.warn('The progress has been set to %s whereas the min ' +
-                          'is set to 0', progress)
 
         if title != '':
             self.update_allowed = False
