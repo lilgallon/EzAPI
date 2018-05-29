@@ -158,7 +158,7 @@ class EzProgressBar:
                 relative or absolute (default: {'none'}).
         """
         if icon_path is not None:
-            self.root.iconbitmap(os.path.abspath(icon))
+            self.root.iconbitmap(os.path.abspath(icon_path))
             self.__update__()
 
     def set_title(self, title):
