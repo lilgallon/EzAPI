@@ -22,7 +22,9 @@ won't have to handle threads or anything. It is a simple as this :
 
 This API is built over the tkinter lib. http://tkinter.fdex.eu/
 
-Author : Lilian Gallon (N3ROO) 28/05/18
+Version : 1.0
+Author(s) : Lilian Gallon (N3ROO) 28/05/18
+License : MIT
 """
 
 import os
