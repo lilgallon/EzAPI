@@ -1,7 +1,51 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 
-""" TODO: desc
+"""
+It allows you to connect to a website to retrieve the HTML code. It also
+allows you to connect to a website that requiere login. To do so, it
+keeps the session alive once you are connected.
+
+
+0. Import
+    from EzWebScraping import EzWebScraping
+
+1. Create an instance:
+    scraper = EzWebScraping()
+
+2. Connect to a website :
+    scraper.connect("url")
+
+3. To retrieve the HTML code :
+    content = scraper.get_html_page()
+
+4. To connect to an other website (an reset session), use :
+    scraper.connect("url", session_reset=True)
+    or
+    scraper.reset_session()
+    scraper.connect("url")
+
+If the website requieres login, you need to use extra data that will
+be contained in a variable named "payload". To find the details that you
+need, you have to analyse the page to find the "name" attribute of the
+inputs. Here is an example :
+
+    payload = {
+        "username": "<USER NAME>",
+        "password": "<PASSWORD>"
+    }
+
+Then you can connect with (take care, the website may redirect to an
+other link).
+    scraper.connect("url", payload)
+
+
+This API is built thanks to those libraries :
+- requests
+- urllib
+- lxml
+
+Author : Lilian Gallon (N3ROO) 18/01/18
 """
 
 import requests
@@ -22,8 +66,8 @@ class EzWebScraping:
     # Main functions
     # ----
 
-    def connect(self, url, payload=None, auto_session_reset=True):
-        if auto_session_reset and self.last_url is not None:
+    def connect(self, url, payload=None, session_reset=False):
+        if session_reset and self.last_url is not None:
             self.__verify_website_session__(url)
 
         self.logger.debug('Connecting to %s ...', url)
