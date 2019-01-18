@@ -1,4 +1,4 @@
-![EzAPI](images/EzProgressBar.png)
+![EzProgressBar](images/EzProgressBar.png)
 
 # EzProgressBar ![version](https://img.shields.io/badge/Version-1-green.svg)
 It allows you to create and update a progress bar in a very simple way.
