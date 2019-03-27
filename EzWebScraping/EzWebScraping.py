@@ -65,7 +65,7 @@ class EzWebScraping:
     # Main functions
     # ----
 
-    def connect(self, url, payload=None, auth_token_name=None,
+    def connect(self, url, payload=None, auth_token_name=None, postRequest=True
                 session_reset=False):
         """It connects to the specified URL. If you want to perform a
         login (that requires login information), you need to specify
@@ -89,6 +89,9 @@ class EzWebScraping:
         "authenticity_token" or ... . Once you found it, copy its name
         attribute, and pass it in this function:
         auth_token_name = <authen-token-name-that-you-found>.
+        Okay, just few things left. Now, take a look at the <form> tag,
+        and if "method" attribute value is "get", change postRequest to
+        false. Otherwise postRequest is already true, so it's fine!
         You are almost done! The last thing to check is the url.
         Sometimes, you write your personal information on a page, and
         the login is performed on a different page. To know that, take
@@ -136,10 +139,22 @@ class EzWebScraping:
                         )
                     )[0]
 
-            result = self.session.post(
-                url,
-                data=payload,
-                headers=dict(referer=url))
+            if postRequest:
+                result = self.session.post(
+                    url,
+                    data=payload,
+                    headers=dict(referer=url))
+            else:
+                # If we want to use a getRequest, we need to put the
+                # information after the url : url?p1=v1&p2=v2 and so on
+                getParameters = "?"
+                for key, value in d.items():
+                    getParameters += key + "=" + value + "&"
+                url += getParameters
+
+                result = self.session.get(
+                    url,
+                    headers=dict(referer=url))
 
         if result.ok:
             self.logger.debug('Connected to %s.', url)
