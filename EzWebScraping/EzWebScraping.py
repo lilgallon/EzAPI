@@ -68,6 +68,51 @@ class EzWebScraping:
 
     def connect(self, url, payload=None, auth_token_name=None,
                 session_reset=False):
+        """It connects to the specified URL. If you want to perform a
+        login (that requires login information), you need to specify
+        payload and probably auth_token_name (some websites do not
+        want this information). Each website login implementation is
+        different, so you will have to find the right values for your
+        website. Here is an explanation: (screenshot guide available on
+        github)
+        Inspect the <form> content in the specified website. Look for
+        the username input, and write the content of its name somewhere.
+        Then, do the samething for the password field. Once it is done,
+        the payload variable should look like this:
+        payload = {
+            <username-input-name>: <your-username>,
+            <password-input-name>: <your-password>
+        }
+        (friendly remember: do not push to git your personnal info).
+        Now, we will take a look to the "authentification token name".
+        Some websites require it. Look for an input which name is
+        something like "csrfmiddlewaretoken" or "csrf_token", or
+        "authenticity_token" or ... . Once you found it, copy its name
+        attribute, and pass it in this function:
+        auth_token_name = <authen-token-name-that-you-found>.
+        You are almost done! The last thing to check is the url.
+        Sometimes, you write your personal information on a page, and
+        the login is performed on a different page. To know that, take
+        a look to the <form> tag. There should be an "action" attribute.
+        It indicates where the login will be performed. If the website
+        is https://github.com/, and the action is "/session", you need
+        to put https://github.com/session, for the url (instead of
+        https://github.com/login in this case).
+
+        Arguments:
+            url {str} -- The url where the login is performed (take a
+            look at the "action" attribute of the <form> tag)
+
+        Keyword Arguments:
+            payload {dict} -- It contains your personal information if
+                you want to perform a login (default: {None}),
+            auth_token_name {[type]} -- It contains the name of the
+            authentification token input (default: {None}),
+            session_reset {bool} -- Change it to true if you want to
+                reset your browsing session (it will forget everything)
+                (default: {False}).
+        """
+
         if session_reset and self.last_url is not None:
             self.__verify_website_session__(url)
 
