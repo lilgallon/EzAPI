@@ -50,7 +50,6 @@ Author : Lilian Gallon (N3ROO) 18/01/18
 
 import requests
 import logging
-import warnings
 import urllib
 from lxml import html
 
