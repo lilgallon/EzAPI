@@ -66,7 +66,8 @@ class EzWebScraping:
     # Main functions
     # ----
 
-    def connect(self, url, payload=None, session_reset=False):
+    def connect(self, url, payload=None, auth_token_name=None,
+                session_reset=False):
         if session_reset and self.last_url is not None:
             self.__verify_website_session__(url)
 
@@ -77,6 +78,20 @@ class EzWebScraping:
                 url,
                 headers=dict(referer=url))
         else:
+            if auth_token_name is not None:
+                # We need the authentification token, and add it to the
+                # payload dict
+                result = self.session.get(url)
+
+                tree = html.fromstring(result.text)
+                payload[auth_token_name] = list(
+                    set(
+                        tree.xpath("//input[@name='" +
+                                   auth_token_name +
+                                   "']/@value")
+                        )
+                    )[0]
+
             result = self.session.post(
                 url,
                 data=payload,
@@ -86,7 +101,7 @@ class EzWebScraping:
             self.logger.debug('Connected to %s.', url)
             self.page = result
         else:
-            logger.error('Failed to connect to %s.', url)
+            self.logger.error('Failed to connect to %s.', url)
             self.page = None
 
     # ----
