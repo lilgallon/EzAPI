@@ -23,7 +23,7 @@ how to use it:
                     auth_token_name="authenticity_token")
 
 2. Retrieve the content of the website page to scrape it through BeautifulSoup
-    scraper = BeautifulSoup(web.get_html_page(), "html.parser")
+    bs = BeautifulSoup(web.get_html_page(), "html.parser")
 
 Note: It uses "logging" from python. If you want to see the logs, you have to
 set up your logger.
@@ -193,6 +193,15 @@ class EzWebScraping:
         """
 
         return self.session
+
+    def get_url(self):
+        """ It gets the url of the current page.
+
+        Returns:
+            string -- The current page URL.
+        """
+
+        return self.page.url
 
     # ----
     # Private functions
