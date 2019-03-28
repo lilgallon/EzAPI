@@ -1,51 +1,40 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 
-"""
-It allows you to connect to a website to retrieve the HTML code. It also
-allows you to connect to a website that requiere login. To do so, it
-keeps the session alive once you are connected.
-
+"""It makes the complicated part of web scraping easy. Everything related to
+the requests and sessions are handled in this class. Here is a small example on
+how to use it:
 
 0. Import
     from EzWebScraping import EzWebScraping
 
-1. Create an instance:
+1.1 Create an instance & connect to a website (without authentification)
     scraper = EzWebScraping()
+    scraper.connect('https://github.com/')
 
-2. Connect to a website :
-    scraper.connect("url")
-
-3. To retrieve the HTML code :
-    content = scraper.get_html_page()
-
-4. To connect to an other website (an reset session), use :
-    scraper.connect("url", session_reset=True)
-    or
-    scraper.reset_session()
-    scraper.connect("url")
-
-If the website requieres login, you need to use extra data that will
-be contained in a variable named "payload". To find the details that you
-need, you have to analyse the page to find the "name" attribute of the
-inputs. Here is an example :
-
+1.2 Create an instance & connect to a website (with authentification)
     payload = {
-        "username": "<USER NAME>",
-        "password": "<PASSWORD>"
+        "login": "YOUR LOGIN",
+        "password": "YOUR PASSWORD"
     }
+    scraper = EzWebScraping()
+    scraper.connect('https://github.com/',
+                    payload=payload,
+                    auth_token_name="authenticity_token")
 
-Then you can connect with (take care, the website may redirect to an
-other link).
-    scraper.connect("url", payload)
+2. Retrieve the content of the website page to scrape it through BeautifulSoup
+    scraper = BeautifulSoup(web.get_html_page(), "html.parser")
 
+Note: It uses "logging" from python. If you want to see the logs, you have to
+set up your logger.
 
 This API is built thanks to those libraries :
-- requests
-- urllib
-- lxml
+- requests: http://docs.python-requests.org/en/master/
+- urllib: https://docs.python.org/3/library/urllib.html
+- lxml: https://lxml.de/
 
-Author : Lilian Gallon (N3ROO) 18/01/18
+Author: Lilian Gallon (N3ROO)
+Version: 1.0
 """
 
 import requests
@@ -55,6 +44,7 @@ from lxml import html
 
 
 class EzWebScraping:
+
     def __init__(self):
         self.logger = logging.getLogger()
         self.session = requests.session()
@@ -65,8 +55,8 @@ class EzWebScraping:
     # Main functions
     # ----
 
-    def connect(self, url, payload=None, auth_token_name=None, postRequest=True
-                session_reset=False):
+    def connect(self, url, payload=None, auth_token_name=None,
+                postRequest=True, session_reset=False):
         """It connects to the specified URL. If you want to perform a
         login (that requires login information), you need to specify
         payload and probably auth_token_name (some websites do not
@@ -148,7 +138,7 @@ class EzWebScraping:
                 # If we want to use a getRequest, we need to put the
                 # information after the url : url?p1=v1&p2=v2 and so on
                 getParameters = "?"
-                for key, value in d.items():
+                for key, value in payload.items():
                     getParameters += key + "=" + value + "&"
                 url += getParameters
 
@@ -173,12 +163,14 @@ class EzWebScraping:
 
         self.session = requests.session()
 
-    def get_page(self):
-        """ It gets the current page.
+    def get_response(self):
+        """ It gets the response of the current page. Here is some
+        documentation:
+        docs.python-requests.org/en/master/user/advanced/#session-objects
 
         Returns:
         --------
-            session -- The current page, or None if unset.
+            session -- The current page response, or None if unset.
         """
 
         return self.page
