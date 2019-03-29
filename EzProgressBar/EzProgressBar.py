@@ -36,6 +36,7 @@ from tkinter.font import Font
 
 
 class EzProgressBar:
+
     def __init__(self, win_title, title, description, icon_path=None):
         """ It inits the window and its components.
 
