@@ -22,7 +22,8 @@ won't have to handle threads or anything. It is a simple as this :
 
 This API is built over the tkinter lib. http://tkinter.fdex.eu/
 
-Author : Lilian Gallon (N3ROO) 28/05/18
+Author: Lilian Gallon (N3ROO)
+Version 1.0
 """
 
 import os
@@ -155,7 +156,7 @@ class EzProgressBar:
                 relative or absolute (default: {'none'}).
         """
         if icon_path is not None:
-            self.root.iconbitmap(os.path.abspath(icon))
+            self.root.iconbitmap(os.path.abspath(icon_path))
             self.__update__()
 
     def set_title(self, title):

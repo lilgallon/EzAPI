@@ -32,11 +32,11 @@ progress_window.set_progress(10)
 progress_window.close()
 ```
 
-## What does it looks like
+## What does it look like ?
 
 ![EzProgressBar_Preview](images/EzProgressBar_preview1.PNG)
 
-You can change the title or the description in the same time as the progression with :
+You can change the title or the description in the same time as the progression with:
 
 ```python
 progress_window.set_progress({progression},
@@ -44,18 +44,18 @@ progress_window.set_progress({progression},
                              description={description})
 ```
 
-Or one by one with :
+Or one by one with:
 ```python
 progress_window.set_title({title})
 progress_window.set_description({description})
 ```
 
-You can change the icon too with :
+You can change the icon too with:
 ```python
 progress_window.set_icon({icon path})
 ```
 
-Or directly when creating the window with :
+Or directly when creating the window with:
 ```python
 progress_window = EzProgressBar({window title},
                                 {progress title},
@@ -69,7 +69,7 @@ Get the file from the github page and put it in your project directory.
 
 ## Documentation
 
-The documentation will soon be available on [n3roo.github.io](https://n3roo.github.io/).
+The detailed documentation is available on the [wiki](https://github.com/N3ROO/EzAPI/wiki).
 
 ## Contributing
 
