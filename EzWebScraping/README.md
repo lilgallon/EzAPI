@@ -1,6 +1,6 @@
 ![EzWebScraping](images/EzWebScraping.png)
 
-# EzWebScraping ![version](https://img.shields.io/badge/Version-1-green.svg)
+# EzWebScraping ![Latest release](https://img.shields.io/github/release/N3ROO/EzAPI.svg) ![Issues](https://img.shields.io/github/issues/N3ROO/EzAPI.svg) ![Python version](https://img.shields.io/badge/Python-3.6+-green.svg)
 
 A simple way to retrieve data from websites with or without authentification.
 
@@ -11,37 +11,7 @@ This API is built thanks to those libraries :
 
 ## How to use it
 
-- Import it
-```python
-    from EzWebScraping import EzWebScraping
-```
-
-- Create an instance & connect to a website (without authentification)
-```python
-    scraper = EzWebScraping()
-    scraper.connect('https://github.com/')
-```
-
-- Create an instance & connect to a website (with authentification)
-```python
-    payload = {
-        "login": "YOUR LOGIN",
-        "password": "YOUR PASSWORD"
-    }
-    scraper = EzWebScraping()
-    scraper.connect('https://github.com/',
-                    payload=payload,
-                    auth_token_name="authenticity_token")
-```
-
-- Retrieve the content of the website page to scrape it with BeautifulSoup
-```python
-    bs = BeautifulSoup(web.get_html_page(), "html.parser")
-```
-
-## How to use it in your projects
-
-Get the file from the github page and put it in your project directory.
+An illustrated tutorial is available on the [wiki](https://github.com/N3ROO/EzAPI/wiki).
 
 ## Documentation
 
