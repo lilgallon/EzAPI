@@ -72,7 +72,7 @@ class EzWebScraping:
             <username-input-name>: <your-username>,
             <password-input-name>: <your-password>
         }
-        (friendly remember: do not push to git your personnal info).
+        (friendly remember: do not push to git your personal info).
         Now, we will take a look to the "authentification token name".
         Some websites require it. Look for an input which name is
         something like "csrfmiddlewaretoken" or "csrf_token", or
