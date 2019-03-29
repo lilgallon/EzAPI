@@ -58,7 +58,7 @@ class EzWebScraping:
     # ----
 
     def connect(self, url, payload=None, auth_token_name=None,
-                postRequest=True, session_reset=False):
+                use_post_request=True, session_reset=False):
         """It connects to the specified URL. If you want to perform a
         login (that requires login information), you need to specify
         payload and probably auth_token_name (some websites do not
@@ -82,8 +82,8 @@ class EzWebScraping:
         attribute, and pass it in this function:
         auth_token_name = <authen-token-name-that-you-found>.
         Okay, just few things left. Now, take a look at the <form> tag,
-        and if "method" attribute value is "get", change postRequest to
-        false. Otherwise postRequest is already true, so it's fine!
+        and if "method" attribute value is "get", change use_post_request to
+        false. Otherwise use_post_request is already true, so it's fine!
         You are almost done! The last thing to check is the url.
         Sometimes, you write your personal information on a page, and
         the login is performed on a different page. To know that, take
@@ -133,8 +133,12 @@ class EzWebScraping:
                                   auth_token_name)
                 try:
                     result = self.session.get(url)
+                except requests.exceptions.MissingSchema as e:
+                    self.logger.info("Connection to %s failed. Is " +
+                                     "the URL valid ?", url)
+                    return False
                 except Exception as e:
-                    self.logger.info('Connection to %s failed', url)
+                    self.logger.info("Connection to %s failed.", url)
                     self.logger.debug(e)
                     return False
 
@@ -148,12 +152,16 @@ class EzWebScraping:
                             )
                         )[0]
 
-            if postRequest:
+            if use_post_request:
                 try:
                     result = self.session.post(
                         url,
                         data=payload,
                         headers=dict(referer=url))
+                except requests.exceptions.MissingSchema as e:
+                    self.logger.info("Connection to %s failed. Is " +
+                                     "the URL valid ?", url)
+                    return False
                 except Exception as e:
                     self.logger.info('Connection to %s failed', url)
                     self.logger.debug(e)
@@ -170,6 +178,10 @@ class EzWebScraping:
                     result = self.session.get(
                         url,
                         headers=dict(referer=url))
+                except requests.exceptions.MissingSchema as e:
+                    self.logger.info("Connection to %s failed. Is " +
+                                     "the URL valid ?", url)
+                    return False
                 except Exception as e:
                     self.logger.info('Connection to %s failed', url)
                     self.logger.debug(e)
@@ -362,5 +374,7 @@ class EzWebScraping:
 
         token = urllib.parse.urlparse(url)
 
-        return all([getattr(token, qualifying_attr)
-                   for qualifying_attr in qualifying])
+        urlvalid = all([getattr(token, qualifying_attr)
+                       for qualifying_attr in qualifying])
+
+        return urlvalid

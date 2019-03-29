@@ -28,7 +28,7 @@ def main():
 
     scraper = EzWebScraping()
     # The url corresponds to the content of "action" in the <form> tag.
-    scraper.connect('https://github.com/session',
+    scraper.connect('http://github.co/session',
                     payload=payload,
                     auth_token_name="authenticity_token")
 
