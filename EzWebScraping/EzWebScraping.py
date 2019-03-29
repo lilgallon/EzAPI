@@ -34,6 +34,8 @@ This API is built thanks to those libraries :
 - lxml: https://lxml.de/
 
 Author: Lilian Gallon (N3ROO)
+Documentation: https://github.com/N3ROO/EzAPI/wiki/EzWebScraping
+Contribute here: https://github.com/N3ROO/EzAPI/
 Version: 1.0
 """
 
@@ -48,7 +50,7 @@ class EzWebScraping:
     def __init__(self):
         self.logger = logging.getLogger()
         self.session = requests.session()
-        self.page = None
+        self.result = None
         self.last_url = None
 
     # ----
@@ -102,38 +104,60 @@ class EzWebScraping:
             authentification token input (default: {None}),
             session_reset {bool} -- Change it to true if you want to
                 reset your browsing session (it will forget everything)
-                (default: {False}).
+                (default: {False})
+
+        Returns:
+        --------
+            boolean -- True whether or not the connection was a success.
         """
 
         if session_reset and self.last_url is not None:
             self.__verify_website_session__(url)
 
-        self.logger.debug('Connecting to %s ...', url)
+        self.logger.info('Connecting to %s ...', url)
 
         if payload is None:
-            result = self.session.get(
-                url,
-                headers=dict(referer=url))
+            try:
+                result = self.session.get(
+                            url,
+                            headers=dict(referer=url))
+            except Exception as e:
+                self.logger.info('Connection to %s failed', url)
+                self.logger.debug(e)
+                return False
         else:
             if auth_token_name is not None:
                 # We need the authentification token, and add it to the
                 # payload dict
-                result = self.session.get(url)
+                self.logger.debug("Searching for %s ...",
+                                  auth_token_name)
+                try:
+                    result = self.session.get(url)
+                except Exception as e:
+                    self.logger.info('Connection to %s failed', url)
+                    self.logger.debug(e)
+                    return False
 
-                tree = html.fromstring(result.text)
-                payload[auth_token_name] = list(
-                    set(
-                        tree.xpath("//input[@name='" +
-                                   auth_token_name +
-                                   "']/@value")
-                        )
-                    )[0]
+                if(result.ok):
+                    tree = html.fromstring(result.text)
+                    payload[auth_token_name] = list(
+                        set(
+                            tree.xpath("//input[@name='" +
+                                       auth_token_name +
+                                       "']/@value")
+                            )
+                        )[0]
 
             if postRequest:
-                result = self.session.post(
-                    url,
-                    data=payload,
-                    headers=dict(referer=url))
+                try:
+                    result = self.session.post(
+                        url,
+                        data=payload,
+                        headers=dict(referer=url))
+                except Exception as e:
+                    self.logger.info('Connection to %s failed', url)
+                    self.logger.debug(e)
+                    return False
             else:
                 # If we want to use a getRequest, we need to put the
                 # information after the url : url?p1=v1&p2=v2 and so on
@@ -142,16 +166,23 @@ class EzWebScraping:
                     getParameters += key + "=" + value + "&"
                 url += getParameters
 
-                result = self.session.get(
-                    url,
-                    headers=dict(referer=url))
+                try:
+                    result = self.session.get(
+                        url,
+                        headers=dict(referer=url))
+                except Exception as e:
+                    self.logger.info('Connection to %s failed', url)
+                    self.logger.debug(e)
+                    return False
+
+        self.result = result
 
         if result.ok:
-            self.logger.debug('Connected to %s.', url)
-            self.page = result
+            self.logger.info('Connected to %s.', url)
+            return True
         else:
-            self.logger.error('Failed to connect to %s.', url)
-            self.page = None
+            self.logger.info('Connection to %s failed', url)
+            return False
 
     # ----
     # Getters & Setters
@@ -163,45 +194,111 @@ class EzWebScraping:
 
         self.session = requests.session()
 
-    def get_response(self):
-        """ It gets the response of the current page. Here is some
+    def get_response(self, ignore_connect_status=False):
+        """It gets the response of the current page. Here is some
         documentation:
         docs.python-requests.org/en/master/user/advanced/#session-objects
+
+        Keyword Arguments:
+            ignore_connect_status {bool} -- If set to true, exceptions will not
+                be raised. In some cases, even if the connection failed, the
+                response object is not empty. In this case, you have to check
+                if the returned value is None. *Warning*: If you ignore the
+                connect status, the result can be the one of a page that you
+                connected before (it gives the illusion that the result is the
+                right one, but it is the one of a previous connection).
+                (default: {False})
+
+        Raises:
+            Exception -- If connect was not called, then it is impossible to
+                find the page response.
+            Exception -- If the last connect failed, then it is impossible to
+                find the page response.
 
         Returns:
         --------
             session -- The current page response, or None if unset.
         """
 
-        return self.page
+        if(not ignore_connect_status):
+            if(self.result is None):
+                raise Exception("connect(...) was not called or failed " +
+                                " on first try. Impossible to obtain the " +
+                                "page response.")
 
-    def get_html_page(self):
+            if(not self.result.ok):
+                raise Exception("Last connect(...) call failed. " +
+                                "Impossible to obtain the page response.")
+
+        return self.result
+
+    def get_html_page(self, ignore_connect_status=False):
         """ It gets the HTML content of the page in bytes.
+
+        Keyword Arguments:
+            ignore_connect_status {bool} -- If set to true, exceptions will not
+                be raised. In some cases, even if the connection failed, the
+                page content is not empty. In this case, you have to check
+                if the returned value is None. *Warning*: If you ignore the
+                connect status, the result can be the one of a page that you
+                connected before (it gives the illusion that the result is the
+                right one, but it is the one of a previous connection).
+                (default: {False})
+
+        Raises:
+            Exception -- If connect was not called, then it is impossible to
+                find the page content.
+            Exception -- If the last connect failed, then it is impossible to
+                find the page content.
 
         Returns:
             bytes -- HTML code of the current page.
         """
 
-        return self.page.content
+        if not ignore_connect_status:
+            if(self.result is None):
+                raise Exception("connect(...) was not called or " +
+                                "failed on first try. Impossible to " +
+                                "obtain the page content.")
+
+            if(not self.result.ok):
+                raise Exception("Last connect(...) call failed. " +
+                                "Impossible to obtain the page " +
+                                "content.")
+
+        return self.result.content
 
     def get_session(self):
         """ It gets the current session.
 
         Returns:
-            Session -- The session object (from the "requests" lib), or
-                None if unset.
+            Session -- The session object (from the "requests" lib).
         """
 
         return self.session
 
     def get_url(self):
-        """ It gets the url of the current page.
+        """It gets the url of the current page.
+
+        Raises:
+            Exception -- If connect was not called, then it is impossible to
+                find the URL.
+            Exception -- If the last connect failed, then it is impossible to
+                find the URL.
 
         Returns:
-            string -- The current page URL.
+            str -- The current page URL.
         """
 
-        return self.page.url
+        if(self.result is None):
+            raise Exception("connect(...) was not called. " +
+                            "Impossible to obtain the page URL.")
+
+        if(not self.result.ok):
+            raise Exception("Last connect(...) call failed. " +
+                            "Impossible to obtain the page URL.")
+
+        return self.result.url
 
     # ----
     # Private functions
