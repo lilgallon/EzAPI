@@ -5,7 +5,7 @@ A compilation of useful and VERY simple python APIs maintained by N3ROO. Those a
 
 ## Index
 - [EzProgressBar](EzProgressBar/README.md) : A simple way to display a progress bar while running code without threads or anything,
-- EzWebScraping : A simple way to retrieve data from websites that requiere login (work in progress).
+- [EzWebScraping](EzWebScraping/README.md) : A simple way to retrieve data from websites that requiere login.
 - More to come ...
 
 ## How to use it

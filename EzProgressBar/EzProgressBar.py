@@ -22,10 +22,10 @@ won't have to handle threads or anything. It is a simple as this :
 
 This API is built over the tkinter lib. http://tkinter.fdex.eu/
 
-Version : 1.0
-Github : https://github.com/N3ROO/EzAPI
-Author(s) : Lilian Gallon (N3ROO) 28/05/18
-License : MIT
+Author: Lilian Gallon (N3ROO)
+Documentation: https://github.com/N3ROO/EzAPI/wiki/EzProgressBar
+Contribute here: https://github.com/N3ROO/EzAPI/
+Version 1.0
 """
 
 import os
