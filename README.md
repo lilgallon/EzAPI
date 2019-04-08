@@ -1,3 +1,5 @@
+# EzAPI is now an organization. This repository is not maintained anymore. Here is the new link [https://github.com/ez-apis](https://github.com/ez-apis)
+
 ![EzAPI](images/EzAPI.png)
 
 # EzAPI
